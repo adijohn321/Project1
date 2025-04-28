@@ -30,8 +30,6 @@ type CarouselContextProps = {
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null)
 
-import React from "react"
-
 function useCarousel() {
   const context = React.useContext(CarouselContext)
 
