@@ -22,10 +22,25 @@ async function hashPassword(password: string) {
 }
 
 async function comparePasswords(supplied: string, stored: string) {
+  console.log(`Comparing passwords: supplied=${supplied}, stored hash format=${stored}`);
   const [hashed, salt] = stored.split(".");
-  const hashedBuf = Buffer.from(hashed, "hex");
-  const suppliedBuf = (await scryptAsync(supplied, salt, 64)) as Buffer;
-  return timingSafeEqual(hashedBuf, suppliedBuf);
+  console.log(`Split into hashed=${hashed?.substring(0, 10)}... and salt=${salt?.substring(0, 10)}...`);
+  
+  if (!hashed || !salt) {
+    console.error("Invalid stored password format - missing hash or salt");
+    return false;
+  }
+  
+  try {
+    const hashedBuf = Buffer.from(hashed, "hex");
+    const suppliedBuf = (await scryptAsync(supplied, salt, 64)) as Buffer;
+    const result = timingSafeEqual(hashedBuf, suppliedBuf);
+    console.log(`Password comparison result: ${result}`);
+    return result;
+  } catch (error) {
+    console.error("Error comparing passwords:", error);
+    return false;
+  }
 }
 
 export function setupAuth(app: Express) {
@@ -47,15 +62,28 @@ export function setupAuth(app: Express) {
   passport.use(
     new LocalStrategy(async (username, password, done) => {
       try {
+        console.log(`Authenticating user: ${username}`);
         const user = await storage.getUserByUsername(username);
-        if (!user || !(await comparePasswords(password, user.password))) {
+        
+        if (!user) {
+          console.log(`User not found: ${username}`);
           return done(null, false);
-        } else {
-          // Update last login time
-          await storage.updateUser(user.id, { lastLogin: new Date() });
-          return done(null, user);
         }
+        
+        console.log(`User found: ${user.username} (ID: ${user.id})`);
+        const passwordMatch = await comparePasswords(password, user.password);
+        
+        if (!passwordMatch) {
+          console.log(`Password did not match for user: ${username}`);
+          return done(null, false);
+        }
+        
+        console.log(`Authentication successful for user: ${username}`);
+        // Update last login time
+        await storage.updateUser(user.id, { lastLogin: new Date() });
+        return done(null, user);
       } catch (error) {
+        console.error(`Authentication error for ${username}:`, error);
         return done(error);
       }
     }),
@@ -94,10 +122,28 @@ export function setupAuth(app: Express) {
     }
   });
 
-  app.post("/api/login", passport.authenticate("local"), (req, res) => {
-    // Don't send password back to client
-    const { password, ...userWithoutPassword } = req.user as SelectUser;
-    res.status(200).json(userWithoutPassword);
+  app.post("/api/login", (req, res, next) => {
+    console.log(`Login attempt with username: ${req.body.username}`);
+    passport.authenticate("local", (err, user, info) => {
+      if (err) {
+        console.error("Login error:", err);
+        return next(err);
+      }
+      if (!user) {
+        console.log("Authentication failed");
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      req.login(user, (loginErr) => {
+        if (loginErr) {
+          console.error("Session error:", loginErr);
+          return next(loginErr);
+        }
+        console.log("Login successful for user:", user.username);
+        // Don't send password back to client
+        const { password, ...userWithoutPassword } = user;
+        return res.status(200).json(userWithoutPassword);
+      });
+    })(req, res, next);
   });
 
   app.post("/api/logout", (req, res, next) => {
