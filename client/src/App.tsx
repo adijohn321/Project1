@@ -14,7 +14,7 @@ import AnnualInvestmentPlanPage from "@/pages/planning/annual-investment-plan";
 
 // Budget routes
 import BudgetPreparation from "@/pages/budget/budget-preparation";
-import BudgetObligation from "@/pages/budget/budget-obligation";
+import BudgetObligationPage from "@/pages/budget/budget-obligation";
 
 // Accounting routes
 import JournalEntries from "@/pages/accounting/journal-entries";
@@ -48,7 +48,7 @@ function Router() {
       />
       <ProtectedRoute 
         path="/budget/obligation" 
-        component={BudgetObligation} 
+        component={BudgetObligationPage} 
         requiredModule="budget" 
       />
       
