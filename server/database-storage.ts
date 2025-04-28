@@ -125,6 +125,10 @@ export class DatabaseStorage implements IStorage {
     return await db.select().from(aipItems).where(eq(aipItems.aipId, aipId));
   }
   
+  async getAIPItems(): Promise<AIPItem[]> {
+    return await db.select().from(aipItems);
+  }
+  
   async updateAIPItem(id: number, aipItemData: Partial<AIPItem>): Promise<AIPItem | undefined> {
     const [updatedAIPItem] = await db
       .update(aipItems)

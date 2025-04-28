@@ -41,6 +41,7 @@ export interface IStorage {
   createAIPItem(aipItem: InsertAIPItem): Promise<AIPItem>;
   getAIPItem(id: number): Promise<AIPItem | undefined>;
   getAIPItemsByAIPId(aipId: number): Promise<AIPItem[]>;
+  getAIPItems(): Promise<AIPItem[]>;
   updateAIPItem(id: number, aipItem: Partial<AIPItem>): Promise<AIPItem | undefined>;
   
   // Budget - Budget Items
@@ -396,6 +397,10 @@ export class MemStorage implements IStorage {
     return Array.from(this.aipItems.values()).filter(
       (item) => item.aipId === aipId,
     );
+  }
+  
+  async getAIPItems(): Promise<AIPItem[]> {
+    return Array.from(this.aipItems.values());
   }
   
   async updateAIPItem(id: number, aipItemData: Partial<AIPItem>): Promise<AIPItem | undefined> {
