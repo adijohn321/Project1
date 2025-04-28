@@ -18,6 +18,8 @@ export type ChartConfig = {
   )
 }
 
+import React from "react"
+
 type ChartContextProps = {
   config: ChartConfig
 }
