@@ -124,9 +124,7 @@ export default function EmployeeRecords() {
   const onSubmitEmployee = (data: z.infer<typeof insertEmployeeSchema>) => {
     // Format the dates properly
     const formattedData = {
-      ...data,
-      birthDate: new Date(data.birthDate).toISOString(),
-      dateHired: new Date(data.dateHired).toISOString(),
+      ...data, 
     };
     createEmployeeMutation.mutate(formattedData);
   };

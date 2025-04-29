@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import Layout from "@/components/layout/layout";
 import { Button } from "@/components/ui/button";
@@ -36,7 +36,7 @@ export default function Payroll() {
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedPayroll, setSelectedPayroll] = useState<number | null>(null);
-  
+
   // Fetch payrolls
   const {
     data: payrolls,
@@ -65,11 +65,11 @@ export default function Payroll() {
   // Filter payrolls by search query
   const filteredPayrolls = payrolls
     ? payrolls.filter(
-        (payroll) =>
-          !searchQuery ||
-          payroll.payrollPeriod.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          payroll.description.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+      (payroll) =>
+        !searchQuery ||
+        payroll.payrollPeriod.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        payroll.description.toLowerCase().includes(searchQuery.toLowerCase())
+    )
     : [];
 
   // Form for creating a new payroll
@@ -229,7 +229,7 @@ export default function Payroll() {
   });
 
   // Get selected payroll
-  const selectedPayrollData = selectedPayroll && payrolls 
+  const selectedPayrollData = selectedPayroll && payrolls
     ? payrolls.find(p => p.id === selectedPayroll)
     : null;
 
@@ -381,23 +381,21 @@ export default function Payroll() {
                     {filteredPayrolls.map((payroll) => (
                       <div
                         key={payroll.id}
-                        className={`p-3 rounded-md cursor-pointer border ${
-                          selectedPayroll === payroll.id
+                        className={`p-3 rounded-md cursor-pointer border ${selectedPayroll === payroll.id
                             ? "border-primary bg-blue-50"
                             : "border-neutral-200 hover:border-primary"
-                        }`}
+                          }`}
                         onClick={() => setSelectedPayroll(payroll.id)}
                       >
                         <div className="flex justify-between items-center">
                           <h4 className="font-medium">{payroll.payrollPeriod}</h4>
                           <span
-                            className={`text-xs px-2 py-1 rounded-full ${
-                              payroll.status === "finalized"
+                            className={`text-xs px-2 py-1 rounded-full ${payroll.status === "finalized"
                                 ? "bg-green-100 text-emerald-800"
                                 : payroll.status === "draft"
-                                ? "bg-gray-100 text-gray-800"
-                                : "bg-blue-100 text-primary"
-                            }`}
+                                  ? "bg-gray-100 text-gray-800"
+                                  : "bg-blue-100 text-primary"
+                              }`}
                           >
                             {payroll.status.charAt(0).toUpperCase() + payroll.status.slice(1)}
                           </span>
@@ -443,7 +441,7 @@ export default function Payroll() {
                         {selectedPayrollData?.description}
                       </p>
                       <p className="text-xs text-neutral-400 mt-1">
-                        {selectedPayrollData?.startDate && selectedPayrollData?.endDate && 
+                        {selectedPayrollData?.startDate && selectedPayrollData?.endDate &&
                           `${new Date(selectedPayrollData.startDate).toLocaleDateString()} - ${new Date(selectedPayrollData.endDate).toLocaleDateString()}`
                         }
                       </p>
@@ -493,7 +491,7 @@ export default function Payroll() {
                                           onChange={(e) => {
                                             const value = Number(e.target.value);
                                             field.onChange(value);
-                                            
+
                                             // Prefill basic pay from employee salary
                                             const employee = employees?.find(emp => emp.id === value);
                                             if (employee) {
