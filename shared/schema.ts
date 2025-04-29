@@ -181,8 +181,8 @@ export const employees = pgTable("employees", {
 export const payrolls = pgTable("payrolls", {
   id: serial("id").primaryKey(),
   payrollPeriod: text("payroll_period").notNull(),
-  startDate: z.coerce.date("start_date").notNull(),
-  endDate: z.coerce.date("end_date").notNull(),
+  startDate: z.coerce.date("start_date"),
+  endDate: z.coerce.date("end_date") ,
   totalAmount: numeric("total_amount").notNull(),
   status: text("status").notNull().default("draft"), // draft, approved, processed, cancelled
   createdBy: integer("created_by").notNull().references(() => users.id),
