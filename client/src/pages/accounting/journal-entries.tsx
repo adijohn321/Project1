@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import Layout from "@/components/layout/layout";
 import { Button } from "@/components/ui/button";
@@ -31,12 +31,12 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { 
-  BudgetObligation, 
-  JournalEntry, 
-  JournalEntryItem, 
-  insertJournalEntrySchema, 
-  insertJournalEntryItemSchema 
+import {
+  BudgetObligation,
+  JournalEntry,
+  JournalEntryItem,
+  insertJournalEntrySchema,
+  insertJournalEntryItemSchema
 } from "@shared/schema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -49,7 +49,7 @@ export default function JournalEntries() {
   const { toast } = useToast();
   const [selectedObligation, setSelectedObligation] = useState<number | null>(null);
   const [selectedJournalEntry, setSelectedJournalEntry] = useState<number | null>(null);
-  
+
   // Fetch pending obligations (for creating journal entries)
   const {
     data: pendingObligations,
@@ -70,7 +70,7 @@ export default function JournalEntries() {
   const {
     data: selectedEntry,
     isLoading: isLoadingSelectedEntry,
-  } = useQuery<{items: JournalEntryItem[]} & JournalEntry>({
+  } = useQuery<{ items: JournalEntryItem[] } & JournalEntry>({
     queryKey: [`/api/accounting/journal-entry/${selectedJournalEntry}`],
     enabled: !!selectedJournalEntry,
   });
@@ -104,7 +104,7 @@ export default function JournalEntries() {
   React.useEffect(() => {
     if (selectedObligation) {
       journalEntryForm.setValue("obligationId", selectedObligation);
-      
+
       // Get obligation details to prefill description
       const obligation = pendingObligations?.find(o => o.id === selectedObligation);
       if (obligation) {
@@ -380,11 +380,10 @@ export default function JournalEntries() {
                     {journalEntries.map((entry) => (
                       <div
                         key={entry.id}
-                        className={`p-3 rounded-md cursor-pointer border ${
-                          selectedJournalEntry === entry.id
+                        className={`p-3 rounded-md cursor-pointer border ${selectedJournalEntry === entry.id
                             ? "border-primary bg-blue-50"
                             : "border-neutral-200 hover:border-primary"
-                        }`}
+                          }`}
                         onClick={() => setSelectedJournalEntry(entry.id)}
                       >
                         <h4 className="font-medium">{entry.entryNumber}</h4>
@@ -394,13 +393,12 @@ export default function JournalEntries() {
                             {new Date(entry.entryDate).toLocaleDateString()}
                           </span>
                           <span
-                            className={`text-xs px-2 py-1 rounded-full ${
-                              entry.status === "posted"
+                            className={`text-xs px-2 py-1 rounded-full ${entry.status === "posted"
                                 ? "bg-green-100 text-emerald-800"
                                 : entry.status === "cancelled"
-                                ? "bg-red-100 text-red-800"
-                                : "bg-gray-100 text-gray-800"
-                            }`}
+                                  ? "bg-red-100 text-red-800"
+                                  : "bg-gray-100 text-gray-800"
+                              }`}
                           >
                             {entry.status.charAt(0).toUpperCase() + entry.status.slice(1)}
                           </span>
@@ -448,7 +446,7 @@ export default function JournalEntries() {
                         <>
                           <Dialog>
                             <DialogTrigger asChild>
-                              <Button 
+                              <Button
                                 className="bg-primary hover:bg-primary/90 text-white"
                                 disabled={!isBalanced}
                               >
@@ -652,9 +650,8 @@ export default function JournalEntries() {
 
                   {/* Balance status */}
                   {selectedEntry.items && selectedEntry.items.length > 0 && (
-                    <div className={`p-3 text-center text-sm font-medium ${
-                      isBalanced ? "text-emerald-600" : "text-red-600"
-                    }`}>
+                    <div className={`p-3 text-center text-sm font-medium ${isBalanced ? "text-emerald-600" : "text-red-600"
+                      }`}>
                       {isBalanced
                         ? "Journal entry is balanced ✓"
                         : `Journal entry is not balanced (Difference: ₱${Math.abs(debitTotal - creditTotal).toLocaleString()})`}

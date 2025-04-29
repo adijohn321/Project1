@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import Layout from "@/components/layout/layout";
 import { Button } from "@/components/ui/button";
@@ -45,7 +45,7 @@ export default function VoucherManagement() {
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedJournalEntry, setSelectedJournalEntry] = useState<number | null>(null);
-  
+
   // Fetch posted journal entries (for creating vouchers)
   const {
     data: postedJournalEntries,
@@ -65,14 +65,14 @@ export default function VoucherManagement() {
   // Filter vouchers by status and search query
   const filteredVouchers = vouchers
     ? vouchers
-        .filter((voucher) => selectedStatus === "all" || voucher.status === selectedStatus)
-        .filter(
-          (voucher) =>
-            !searchQuery ||
-            voucher.voucherNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            voucher.payee.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            voucher.description.toLowerCase().includes(searchQuery.toLowerCase())
-        )
+      .filter((voucher) => selectedStatus === "all" || voucher.status === selectedStatus)
+      .filter(
+        (voucher) =>
+          !searchQuery ||
+          voucher.voucherNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          voucher.payee.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          voucher.description.toLowerCase().includes(searchQuery.toLowerCase())
+      )
     : [];
 
   // Form for creating a new voucher
@@ -94,7 +94,7 @@ export default function VoucherManagement() {
   React.useEffect(() => {
     if (selectedJournalEntry) {
       voucherForm.setValue("journalEntryId", selectedJournalEntry);
-      
+
       // Get journal entry details to prefill description and amount
       const journalEntry = postedJournalEntries?.find(je => je.id === selectedJournalEntry);
       if (journalEntry) {
@@ -375,8 +375,8 @@ export default function VoucherManagement() {
                   {searchQuery
                     ? "Try adjusting your search criteria"
                     : selectedStatus !== "all"
-                    ? `No vouchers with status "${selectedStatus}"`
-                    : "Create a new voucher to get started"}
+                      ? `No vouchers with status "${selectedStatus}"`
+                      : "Create a new voucher to get started"}
                 </p>
               </div>
             ) : (
@@ -425,15 +425,14 @@ export default function VoucherManagement() {
                         </td>
                         <td className="px-4 py-3">
                           <span
-                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                              voucher.status === "approved"
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${voucher.status === "approved"
                                 ? "bg-green-100 text-emerald-800"
                                 : voucher.status === "paid"
-                                ? "bg-blue-100 text-primary"
-                                : voucher.status === "cancelled"
-                                ? "bg-red-100 text-red-800"
-                                : "bg-gray-100 text-gray-800"
-                            }`}
+                                  ? "bg-blue-100 text-primary"
+                                  : voucher.status === "cancelled"
+                                    ? "bg-red-100 text-red-800"
+                                    : "bg-gray-100 text-gray-800"
+                              }`}
                           >
                             {voucher.status.charAt(0).toUpperCase() + voucher.status.slice(1)}
                           </span>
