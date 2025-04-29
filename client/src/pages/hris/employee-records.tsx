@@ -247,10 +247,10 @@ export default function EmployeeRecords() {
                             <Input
                               type="date"
                               {...field}
-                              value={field.value ? new Date(field.value).toISOString().split('T')[0] : ''}
-                              onChange={(e) => {
-                                field.onChange(e.target.value ? new Date(e.target.value).toISOString() : '');
-                              }}
+                              value={field.value }
+                              // onChange={(e) => {
+                              //   field.onChange(e.target.value ? new Date(e.target.value).toISOString() : '');
+                              // }}
                             />
                           </FormControl>
                           <FormMessage />
