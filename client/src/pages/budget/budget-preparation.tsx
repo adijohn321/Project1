@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import Layout from "@/components/layout/layout";
 import { Button } from "@/components/ui/button";
@@ -55,11 +55,11 @@ export default function BudgetPreparation() {
 
   // Create derived state for all AIP items from all AIPs
   const [allAIPItems, setAllAIPItems] = useState<AIPItem[]>([]);
-  
+
   // Fetch all AIP items from all AIPs for the fiscal year
   const fetchAllAIPItems = async () => {
     if (!aips) return;
-    
+
     let items: AIPItem[] = [];
     for (const aip of aips) {
       const { data } = await queryClient.fetchQuery({
@@ -80,11 +80,11 @@ export default function BudgetPreparation() {
   // Filter AIP items by search query
   const filteredAIPItems = searchQuery
     ? allAIPItems.filter(
-        (item) =>
-          item.projectName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.sector.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.location?.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+      (item) =>
+        item.projectName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.sector.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.location?.toLowerCase().includes(searchQuery.toLowerCase())
+    )
     : allAIPItems;
 
   // Fetch budget items for the selected AIP item
@@ -211,11 +211,10 @@ export default function BudgetPreparation() {
                     {filteredAIPItems.map((item) => (
                       <div
                         key={item.id}
-                        className={`p-3 rounded-md cursor-pointer border ${
-                          selectedAIPItem === item.id
+                        className={`p-3 rounded-md cursor-pointer border ${selectedAIPItem === item.id
                             ? "border-primary bg-blue-50"
                             : "border-neutral-200 hover:border-primary"
-                        }`}
+                          }`}
                         onClick={() => setSelectedAIPItem(item.id)}
                       >
                         <h4 className="font-medium">{item.projectName}</h4>
@@ -397,13 +396,12 @@ export default function BudgetPreparation() {
                               </td>
                               <td className="px-4 py-3">
                                 <span
-                                  className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                    item.status === "active"
+                                  className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${item.status === "active"
                                       ? "bg-green-100 text-emerald-800"
                                       : item.status === "depleted"
-                                      ? "bg-red-100 text-red-800"
-                                      : "bg-gray-100 text-gray-800"
-                                  }`}
+                                        ? "bg-red-100 text-red-800"
+                                        : "bg-gray-100 text-gray-800"
+                                    }`}
                                 >
                                   {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
                                 </span>
