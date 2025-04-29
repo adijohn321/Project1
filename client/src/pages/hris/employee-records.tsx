@@ -248,9 +248,9 @@ export default function EmployeeRecords() {
                               type="date"
                               {...field}
                               value={field.value }
-                              // onChange={(e) => {
-                              //   field.onChange(e.target.value ? new Date(e.target.value).toISOString() : '');
-                              // }}
+                              onChange={(e) => {
+                                field.onChange(e.target.value ? new Date(e.target.value).toISOString() : '');
+                              }}
                             />
                           </FormControl>
                           <FormMessage />
