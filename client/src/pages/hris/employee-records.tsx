@@ -83,7 +83,7 @@ export default function EmployeeRecords() {
       firstName: "",
       middleName: "",
       lastName: "",
-      birthDate: "",
+      birthDate: new Date() ,
       gender: "male",
       address: "",
       contactNumber: "",
@@ -91,7 +91,7 @@ export default function EmployeeRecords() {
       department: "",
       position: "",
       salary: "0",
-      dateHired: "",
+      dateHired: new Date() ,
       status: "active",
       createdBy: user?.id || 0,
     },
@@ -124,7 +124,9 @@ export default function EmployeeRecords() {
   const onSubmitEmployee = (data: z.infer<typeof insertEmployeeSchema>) => {
     // Format the dates properly
     const formattedData = {
-      ...data, 
+      ...data,
+      birthDate: new Date(data.birthDate).toISOString(),
+      dateHired: new Date(data.dateHired).toISOString(),
     };
     createEmployeeMutation.mutate(formattedData);
   };
@@ -245,10 +247,10 @@ export default function EmployeeRecords() {
                             <Input
                               type="date"
                               {...field}
-                              //value={field.value ? new Date(field.value).toISOString().split('T')[0] : ''}
-                              // onChange={(e) => {
-                              //   field.onChange(e.target.value ? new Date(e.target.value).toISOString() : '');
-                              // }}
+                              value={field.value ? new Date(field.value).toISOString().split('T')[0] : ''}
+                              onChange={(e) => {
+                                field.onChange(e.target.value ? new Date(e.target.value).toISOString() : '');
+                              }}
                             />
                           </FormControl>
                           <FormMessage />
