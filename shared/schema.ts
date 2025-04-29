@@ -163,7 +163,7 @@ export const employees = pgTable("employees", {
   firstName: text("first_name").notNull(),
   middleName: text("middle_name"),
   lastName: text("last_name").notNull(),
-  birthDate: text("birth_date").notNull(),
+  birthDate: timestamp("birth_date").notNull(),
   gender: text("gender").notNull(),
   address: text("address").notNull(),
   contactNumber: text("contact_number").notNull(),
@@ -171,7 +171,7 @@ export const employees = pgTable("employees", {
   department: text("department").notNull(),
   position: text("position").notNull(),
   salary: numeric("salary").notNull(),
-  dateHired: text("date_hired").notNull(),
+  dateHired: timestamp("date_hired").notNull(),
   status: text("status").notNull().default("active"), // active, inactive, on_leave
   createdBy: integer("created_by").notNull().references(() => users.id),
   createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -181,8 +181,8 @@ export const employees = pgTable("employees", {
 export const payrolls = pgTable("payrolls", {
   id: serial("id").primaryKey(),
   payrollPeriod: text("payroll_period").notNull(),
-  startDate: text("start_date").notNull(),
-  endDate: text("end_date").notNull(),
+  startDate: timestamp("start_date").notNull(),
+  endDate: timestamp("end_date").notNull(),
   totalAmount: numeric("total_amount").notNull(),
   status: text("status").notNull().default("draft"), // draft, approved, processed, cancelled
   createdBy: integer("created_by").notNull().references(() => users.id),
